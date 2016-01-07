@@ -32,9 +32,11 @@ module.exports = {
 		},
 							{
 								test: /\.scss$/,
-								loader: "style!css!sass"
+								loader: "style!css!sass?sourceMap"
 							},
-							{ test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$/, loader: "file" },
+							{ 
+								test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$/, 
+								loader: "file" },
 							{
 								test: /\.css$/,
 								loader: 'style-loader!css-loader'
@@ -56,7 +58,7 @@ module.exports = {
 									presets:['react']
 								}
 							}
-						 
 						 ]
 	}
 };
+
