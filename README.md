@@ -6,14 +6,16 @@
 SoundCloud API
 Graphics
 
-Function 1, Collision detection walls
-Function 2, Play different music depending on what room user is.
-Function 3, Animation light
-Function 4, Animation people dancing
-Function 5, Moving user with mouse
-Function 6, Player from SoundCloud
-Function 7, Fading different rooms and “states”
-Function 8, Textbox 
+Functions:
+
+1. Collision detection walls
+2. Play different music depending on what room user is.
+3. Animation light
+4. Animation people dancing
+5. Moving user with mouse
+6. Player from SoundCloud
+7. Fading different rooms and “states”
+8. Textbox 
 
 
 
