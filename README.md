@@ -23,11 +23,11 @@ Functions:
 ## Installation
 
 ### // node & npm //
-step 1: install node js 4.2.4
+1. install node js 4.2.4
 (windows måste byta cmd till node js cmd tryck winknappen skriv cmd och ta och öppna den som det står node js på) 
-step 2: open cmd for nodejs
+2. open cmd for nodejs
 (Jag har redan confat alla paket vi behöver så npm install så borde ni få allt ni behöver)
-step 3: npm install
+3. npm install
 Det här installerar alla moduler react sass babel och annat smått och gott som vi kan behöva.
 
 
