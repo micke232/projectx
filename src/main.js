@@ -52,15 +52,13 @@ var App = React.createClass({
 		context.fillStyle = "#c31b48";
 		context.fill();
 	},
-	handleMouseClick: function(){
-		document.addEventListener("click", function(event){
-			mouseClick.y = event.y;
-			mouseClick.x = event.x;
+	handleMouseClick: function(event){
+		mouseClick.y = event.nativeEvent.clientY;
+		mouseClick.x = event.nativeEvent.clientX;
 			distance = Math.sqrt(Math.pow(mouseClick.x - user.posX, 2) + Math.pow(mouseClick.y - user.posY,2));
 			user.directionX = (mouseClick.x - user.posX) / distance;
 			user.directionY = (mouseClick.y - user.posY) / distance;
 			user.moving = true
-		});
 	},
 	componentDidMount: function() {
 		this.init();
