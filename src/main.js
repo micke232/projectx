@@ -32,11 +32,21 @@ var App = React.createClass({
 	init: function() {
 		game = document.getElementById("myCanvas");
 		context = game.getContext("2d");
-		context.canvas.height = window.innerHeight;
-		context.canvas.width = window.innerWidth;
+		context.canvas.height = 720;
+		context.canvas.width = 1280;
+
+		/* Background image function */
+		var background = new Image();
+		background.src = "src/graphics/background1.jpg";
+		background.onload = function(){
+			context.drawImage(background,0,0);
+		}
 	},
 	update: function(){
-		context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+		/* clearRect skriver över bakgrundsbilden */
+		//context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
 		if(user.moving === true){
 			user.posX += user.directionX * user.speed * elapsed;
 			user.posY += user.directionY * user.speed * elapsed;
@@ -45,12 +55,77 @@ var App = React.createClass({
 			};		
 		};
 		this.drawUser();
+		this.drawWalls();
 	},
 	drawUser: function(){
 		context.beginPath();
 		context.arc(user.posX, user.posY, user.sizeX, 0, 2*Math.PI);
 		context.fillStyle = "#c31b48";
 		context.fill();
+	},
+	drawWalls: function(){
+		/* Walls */
+
+		/* Room 1 Top Left */
+		context.beginPath();
+		context.moveTo(500,100); //(Top-pos,length)
+		context.lineTo(500,0);	//(Bottom-pos, margin-top)
+		context.lineWidth = 15;
+		context.strokeStyle = '#fff';
+		context.stroke();
+
+		context.beginPath();
+		context.moveTo(500,300);
+		context.lineTo(500,200);
+		context.stroke();
+
+		context.beginPath();
+		context.moveTo(507,300);
+		context.lineTo(0,300);
+		context.stroke();
+
+		/* Room 2 Top Right */
+		context.beginPath();
+		context.moveTo(800,300);
+		context.lineTo(1100,300);
+		context.stroke();
+
+		context.beginPath();
+		context.moveTo(1200,300);
+		context.lineTo(1280,300);
+		context.stroke();
+
+		context.beginPath();
+		context.moveTo(807,307);
+		context.lineTo(807,0);
+		context.stroke();
+
+		/* Room 3 Bottom Left */
+		context.beginPath();
+		context.moveTo(0,450);
+		context.lineTo(400,450);
+		context.stroke();
+
+		context.beginPath();
+		context.moveTo(500,442);
+		context.lineTo(500,768);
+		context.stroke();
+
+		/* Room 4 Bottom Right */
+		context.beginPath();
+		context.moveTo(800,450);
+		context.lineTo(1280,450);
+		context.stroke();
+
+		context.beginPath();
+		context.moveTo(807,442);
+		context.lineTo(807,608);
+		context.stroke();
+
+		context.beginPath();
+		context.moveTo(807, 698);
+		context.lineTo(807, 768);
+		context.stroke();
 	},
 	handleMouseClick: function(event){
 		mouseClick.y = event.nativeEvent.clientY;
