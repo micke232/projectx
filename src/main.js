@@ -16,16 +16,34 @@ window.user = {
 	directionX: NaN,
 	checkPosX: NaN,
 	checkPosY: NaN,
-	moving: false
-}
+	moving: false,
+	inRoom: false
+};
 
 window.mouseClick = {
 	y: NaN,
 	x: NaN
-}
+};
 
 window.distance;
 window.elapsed = 0.01;
+
+window.onload = function() {
+	SC.initialize({
+		client_id: '048fd098861b5d45aabb3862e9e81832'
+	})
+}
+
+function playMusic(genre) {
+	console.log(genre);
+	SC.get('/tracks',
+		{genres: genre},
+		function(tracks){
+			console.log(tracks);
+			var random = Math.floor(Math.random() * tracks.length);
+			SC.oEmbed(tracks[random].uri, {auto_play: true}, document.getElementById('soundResult'));
+		});
+}
 
 var App = React.createClass({
 
@@ -50,12 +68,21 @@ var App = React.createClass({
 		if(user.moving === true){
 			user.posX += user.directionX * user.speed * elapsed;
 			user.posY += user.directionY * user.speed * elapsed;
+			this.collision();
 			if(user.posX >= mouseClick.x -5 && user.posX <= mouseClick.x + 5 && user.posY >= mouseClick.y -5 && user.posY <= mouseClick.y + 5){
 				user.moving = false;
-			};		
-		};
+			}
+		}
 		this.drawUser();
 		this.drawWalls();
+	},
+	collision: function(){
+		if ((user.posX <= 300) && (user.posY <= 300)){
+			if (user.inRoom === false){
+				playMusic('techno');
+				user.inRoom = true;
+			}
+		}
 	},
 	drawUser: function(){
 		context.beginPath();
@@ -141,11 +168,15 @@ var App = React.createClass({
 	},
 	render: function() {
 		return (
-			<canvas id="myCanvas" onClick={this.handleMouseClick}></canvas>
+			<div>
+				<div id="soundResult"></div>
+				<canvas id="myCanvas" onClick={this.handleMouseClick}></canvas>
+			</div>
 		);
 	}
 });
 
-ReactDOM.render(<App interval={25}/>, document.getElementById('app')
+ReactDOM.render(
+	<App interval={25}/>, document.getElementById('app')
 );
 
