@@ -6,7 +6,7 @@ require("./sass/style.scss");
 
 var game;
 var context;
-
+var metaData = require("json!./data/data.json");
 window.user = {
 	speed: 800,
 	posY: 350,
@@ -26,7 +26,7 @@ window.mouseClick = {
 	x: NaN
 };
 
-var distance;
+var distance; 
 var elapsed = 0.01;
 var background = new Image();
 
@@ -56,7 +56,6 @@ function playMusic(genre) {
 }
 
 var App = React.createClass({
-
 	getInitialState: function() {
 		return {
 			room: "notInRoom"
@@ -68,6 +67,12 @@ var App = React.createClass({
 	},
 
 	init: function() {
+		var datsa = this.props.data;
+		console.log(datsa.room1)
+		for (var index in datsa.room1) {
+			console.log(datsa.room1[index]);
+		}
+
 		game = document.getElementById("myCanvas");
 		context = game.getContext("2d");
 		context.canvas.height = 720;
@@ -113,6 +118,9 @@ var App = React.createClass({
 	},
 
 	drawWalls: function(){
+		
+		
+		
 		/* Walls */
 
 		/* Room 1 Top Left */
@@ -120,7 +128,7 @@ var App = React.createClass({
 		context.moveTo(500,100); //(Top-pos,length)
 		context.lineTo(500,0);	//(Bottom-pos, margin-top)
 		context.lineWidth = 15;
-		context.strokeStyle = '#fff';
+		context.strokeStyle = '#5d1818';
 		context.stroke();
 
 		context.beginPath();
@@ -132,7 +140,8 @@ var App = React.createClass({
 		context.moveTo(507,300);
 		context.lineTo(0,300);
 		context.stroke();
-
+		
+		
 		/* Room 2 Top Right */
 		context.beginPath();
 		context.moveTo(800,300);
@@ -203,5 +212,5 @@ var App = React.createClass({
 });
 
 ReactDOM.render(
-	<App interval={25}/>, document.getElementById('app')
+	<App interval={25} data={metaData}/>, document.getElementById('app')
 );
