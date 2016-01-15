@@ -118,72 +118,62 @@ var App = React.createClass({
 	},
 
 	drawWalls: function(){
-		
-		
-		
-		/* Walls */
+
+
+		/* Shadow */
+		context.save();
+		context.shadowColor   = '#666';
+		context.shadowOffsetX = 8;
+		context.shadowOffsetY = 8;
+		context.shadowBlur    = 5;
+
+		/* Line width and style */
+		context.lineWidth = 15;
+		context.strokeStyle = '#fff';
+
 
 		/* Room 1 Top Left */
 		context.beginPath();
 		context.moveTo(500,100); //(Top-pos,length)
 		context.lineTo(500,0);	//(Bottom-pos, margin-top)
-		context.lineWidth = 15;
-		context.strokeStyle = '#5d1818';
-		context.stroke();
 
-		context.beginPath();
+
 		context.moveTo(500,300);
 		context.lineTo(500,200);
-		context.stroke();
 
-		context.beginPath();
 		context.moveTo(507,300);
 		context.lineTo(0,300);
-		context.stroke();
-		
-		
+
 		/* Room 2 Top Right */
-		context.beginPath();
 		context.moveTo(800,300);
 		context.lineTo(1100,300);
-		context.stroke();
 
-		context.beginPath();
 		context.moveTo(1200,300);
 		context.lineTo(1280,300);
-		context.stroke();
 
-		context.beginPath();
 		context.moveTo(807,307);
 		context.lineTo(807,0);
-		context.stroke();
 
 		/* Room 3 Bottom Left */
-		context.beginPath();
 		context.moveTo(0,450);
 		context.lineTo(400,450);
-		context.stroke();
 
-		context.beginPath();
 		context.moveTo(500,442);
 		context.lineTo(500,768);
-		context.stroke();
 
 		/* Room 4 Bottom Right */
-		context.beginPath();
 		context.moveTo(800,450);
 		context.lineTo(1280,450);
-		context.stroke();
 
-		context.beginPath();
 		context.moveTo(807,442);
 		context.lineTo(807,608);
-		context.stroke();
 
-		context.beginPath();
 		context.moveTo(807, 698);
 		context.lineTo(807, 768);
 		context.stroke();
+
+		/* End shadow */
+		context.restore();
 	},
 
 	handleMouseClick: function(event){
