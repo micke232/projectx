@@ -11,8 +11,8 @@ window.user = {
 	speed: 800,
 	posY: 350,
 	posX: 950,
-	sizeY: 20,
-	sizeX: 20,
+	sizeY: 80,
+	sizeX: 80,
 	directionY: NaN,
 	directionX: NaN,
 	checkPosX: NaN,
@@ -79,7 +79,7 @@ var App = React.createClass({
 		context.canvas.width = 1280;
 
 		/* Background image function */
-		background.src = "src/graphics/background1.jpg";
+		background.src = "src/graphics/grass_bg.png";
 
 	},
 
@@ -102,7 +102,7 @@ var App = React.createClass({
 	collision: function(){
 
 		if ((user.posX <= 300) && (user.posY <= 300)){
-			this.stateHandler("techo");
+			this.stateHandler("techno");
 			if (user.inRoom === false){
 				playMusic('techno');
 				user.inRoom = true;
@@ -111,15 +111,16 @@ var App = React.createClass({
 	},
 
 	drawUser: function(){
-		context.beginPath();
+		/*context.beginPath();
 		context.arc(user.posX, user.posY, user.sizeX, 0, 2*Math.PI);
 		context.fillStyle = "#c31b48";
-		context.fill();
+		context.fill();*/
+		var img = new Image();
+		img.src = 'src/graphics/megamanShot32.png';
+		context.drawImage(img, user.posX, user.posY, user.sizeX, user.sizeY);
 	},
 
 	drawWalls: function(){
-
-
 		/* Shadow */
 		context.save();
 		context.shadowColor   = '#666';
@@ -177,14 +178,14 @@ var App = React.createClass({
 	},
 
 	handleMouseClick: function(event){
-		
+
 		var rect = game.getBoundingClientRect();
 		mouseClick.y = event.nativeEvent.clientY - rect.top;
 		mouseClick.x = event.nativeEvent.clientX - rect.left;
 		distance = Math.sqrt(Math.pow(mouseClick.x - user.posX, 2) + Math.pow(mouseClick.y - user.posY,2));
 		user.directionX = (mouseClick.x - user.posX) / distance;
 		user.directionY = (mouseClick.y - user.posY) / distance;
-		user.moving = true
+		user.moving = true;
 	},
 	
 	componentDidMount: function() {
