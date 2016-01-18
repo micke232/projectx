@@ -29,21 +29,12 @@ window.mouseClick = {
 
 var distance; 
 var elapsed = 0.01;
-var background = new Image();
 
-function wallHandler(){
-	const rooms = {
-		topLeft: {},
-		topRight: {},
-		bottomLeft: {},
-		bottomRight: {}
-	};
-}
 window.onload = function() {
 	SC.initialize({
 		client_id: '048fd098861b5d45aabb3862e9e81832'
 	})
-}
+};
 
 function playMusic(genre) {
 	console.log(genre);
@@ -73,13 +64,10 @@ var App = React.createClass({
 		context = game.getContext("2d");
 		context.canvas.height = 720;
 		context.canvas.width = 1280;
-		/* Background image function */
-
 	},
 
 	update: function(){
 		context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-		context.drawImage(background,0,0);
 		if (!user.collision){
 		if(user.moving === true){
 			user.posX += user.directionX * user.speed * elapsed;
@@ -122,11 +110,12 @@ var App = React.createClass({
 		context.arc(user.posX, user.posY, user.sizeX, 0, 2*Math.PI);
 		context.fillStyle = "#c31b48";
 		context.fill();
+		var img = new Image();
+		img.src = 'src/graphics/megamanShot32.png';
+		context.drawImage(img, user.posX, user.posY, user.sizeX, user.sizeY);
 	},
 
 	drawWalls: function(){
-
-
 		/* Shadow */
 		context.save();
 		context.shadowColor   = '#666';
@@ -184,7 +173,7 @@ var App = React.createClass({
 	},
 
 	handleMouseClick: function(event){
-		
+
 		var rect = game.getBoundingClientRect();
 		mouseClick.y = event.nativeEvent.clientY - rect.top;
 		mouseClick.x = event.nativeEvent.clientX - rect.left;
@@ -193,10 +182,11 @@ var App = React.createClass({
 		distance = Math.sqrt(Math.pow(mouseClick.x - user.posX, 2) + Math.pow(mouseClick.y - user.posY,2));
 		user.directionX = (mouseClick.x - user.posX) / distance;
 		user.directionY = (mouseClick.y - user.posY) / distance;
-		user.moving = true
 		if (user.collision = true){
 			user.collision = false;
 		}
+		user.moving = true;
+
 	},
 	
 	componentDidMount: function() {
