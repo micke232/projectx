@@ -1,16 +1,16 @@
 "use strict";
 const React = require("react");
 const ReactDOM = require("react-dom");
+const classNames = require('classnames');
 require("./sass/style.scss");
-
-
 var game;
 var context;
-var metaData = require("json!./data/data.json");
+var walls = require("json!./data/data.json");
+
 window.user = {
-	speed: 800,
+	speed: 500,
 	posY: 350,
-	posX: 950,
+	posX: 600,
 	sizeY: 20,
 	sizeX: 20,
 	directionY: NaN,
@@ -18,7 +18,8 @@ window.user = {
 	checkPosX: NaN,
 	checkPosY: NaN,
 	moving: false,
-	inRoom: false
+	inRoom: false,
+	collision: false
 };
 
 window.mouseClick = {
@@ -63,30 +64,23 @@ var App = React.createClass({
 	},
 
 	stateHandler: function(inRoom){
+
 		this.setState({room: inRoom})
 	},
 
 	init: function() {
-		var datsa = this.props.data;
-		console.log(datsa.room1)
-		for (var index in datsa.room1) {
-			console.log(datsa.room1[index]);
-		}
-
 		game = document.getElementById("myCanvas");
 		context = game.getContext("2d");
 		context.canvas.height = 720;
 		context.canvas.width = 1280;
-
 		/* Background image function */
-		background.src = "src/graphics/background1.jpg";
 
 	},
 
 	update: function(){
 		context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 		context.drawImage(background,0,0);
-		
+		if (!user.collision){
 		if(user.moving === true){
 			user.posX += user.directionX * user.speed * elapsed;
 			user.posY += user.directionY * user.speed * elapsed;
@@ -95,19 +89,32 @@ var App = React.createClass({
 				user.moving = false;
 			}
 		}
+		}
 		this.drawUser();
 		this.drawWalls();
 	},
 
+
 	collision: function(){
 
+		for (var i = 0; i < this.props.data.length; i++){
+		if (user.posX > this.props.data[i].x2 && user.posX < this.props.data[i].x1 &&
+			user.posY < this.props.data[i].y2 && user.posY > this.props.data[i].y1){
+			user.collision = true;
+
+		}
+		}
+
+
+
 		if ((user.posX <= 300) && (user.posY <= 300)){
-			this.stateHandler("techo");
+			this.stateHandler("techno");
 			if (user.inRoom === false){
 				playMusic('techno');
 				user.inRoom = true;
 			}
 		}
+
 	},
 
 	drawUser: function(){
@@ -181,20 +188,34 @@ var App = React.createClass({
 		var rect = game.getBoundingClientRect();
 		mouseClick.y = event.nativeEvent.clientY - rect.top;
 		mouseClick.x = event.nativeEvent.clientX - rect.left;
+		console.log(mouseClick.x + " " + "X");
+		console.log(mouseClick.y + " " + "Y");
 		distance = Math.sqrt(Math.pow(mouseClick.x - user.posX, 2) + Math.pow(mouseClick.y - user.posY,2));
 		user.directionX = (mouseClick.x - user.posX) / distance;
 		user.directionY = (mouseClick.y - user.posY) / distance;
 		user.moving = true
+		if (user.collision = true){
+			user.collision = false;
+		}
 	},
 	
 	componentDidMount: function() {
 		this.init();
 		setInterval(this.update, this.props.interval);
 	},
+
+
 	render: function() {
+
+
+		var canvasClasses = classNames(
+			"test1",
+			"test2"
+		);
+
 		return (
 			<div>
-				<div id="soundResult"></div>
+				<div id="soundResult" className={canvasClasses}></div>
 				<canvas id="myCanvas" onClick={this.handleMouseClick} className={this.state.room}></canvas>
 			</div>
 		);
@@ -202,5 +223,5 @@ var App = React.createClass({
 });
 
 ReactDOM.render(
-	<App interval={25} data={metaData}/>, document.getElementById('app')
+	<App interval={10} data={walls}/>, document.getElementById('app')
 );
