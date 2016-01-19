@@ -3,7 +3,7 @@ const React = require("react");
 const ReactDOM = require("react-dom");
 require("./sass/style.scss");
 
-
+var musicPlayer;
 var game;
 var context;
 var metaData = require("json!./data/data.json");
@@ -38,22 +38,34 @@ function wallHandler(){
 		bottomRight: {}
 	};
 }
-window.onload = function() {
+
+window.onload = function(){
 	SC.initialize({
 		client_id: '048fd098861b5d45aabb3862e9e81832'
 	})
-}
+};
 
-function playMusic(genre) {
-	console.log(genre);
-	SC.get('/tracks',
-				 {genres: genre},
-				 function(tracks){
-		console.log(tracks);
-		var random = Math.floor(Math.random() * tracks.length);
-		SC.oEmbed(tracks[random].uri, {auto_play: true}, document.getElementById('soundResult'));
+function loadTrack(trackID){
+	/*musicPlayer.pause();*/
+
+	SC.stream('/tracks/' + trackID, function(s){
+		musicPlayer = s;
+		musicPlayer.play();
 	});
 }
+
+/*
+function playMusic(genre){
+	console.log(genre);
+	SC.get('/tracks',
+		{genres: genre},
+		function(tracks){
+			console.log(tracks);
+			var random = Math.floor(Math.random() * tracks.length);
+			SC.oEmbed(tracks[random].uri, {auto_play: true, show_comments: false, maxheight: 70, maxwidth: 600}, document.getElementById('soundResult'));
+		});
+}
+*/
 
 var App = React.createClass({
 	getInitialState: function() {
@@ -68,7 +80,7 @@ var App = React.createClass({
 
 	init: function() {
 		var datsa = this.props.data;
-		console.log(datsa.room1)
+		console.log(datsa.room1);
 		for (var index in datsa.room1) {
 			console.log(datsa.room1[index]);
 		}
@@ -101,10 +113,19 @@ var App = React.createClass({
 
 	collision: function(){
 
-		if ((user.posX <= 300) && (user.posY <= 300)){
-			this.stateHandler("techo");
+		if ((user.posX <= 510) && (user.posY <= 305)){
+			this.stateHandler('indiepop');
 			if (user.inRoom === false){
-				playMusic('techno');
+				/*playMusic('indiepop');*/
+				loadTrack('293');
+				user.inRoom = true;
+			}
+		}
+		if ((user.posX >= 800) && (user.posY <= 305)){
+			this.stateHandler('techno');
+			if (user.inRoom === false){
+				/*playMusic('techno');*/
+				loadTrack('294');
 				user.inRoom = true;
 			}
 		}
