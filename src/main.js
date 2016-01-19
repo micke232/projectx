@@ -1,24 +1,25 @@
 "use strict";
 const React = require("react");
 const ReactDOM = require("react-dom");
+const classNames = require('classnames');
 require("./sass/style.scss");
-
-
 var game;
 var context;
-var metaData = require("json!./data/data.json");
+var walls = require("json!./data/data.json");
+
 window.user = {
-	speed: 800,
+	speed: 500,
 	posY: 350,
-	posX: 950,
-	sizeY: 20,
-	sizeX: 20,
+	posX: 600,
+	sizeY: 12.5,
+	sizeX: 12.5,
 	directionY: NaN,
 	directionX: NaN,
 	checkPosX: NaN,
 	checkPosY: NaN,
 	moving: false,
-	inRoom: false
+	inRoom: false,
+	collision: false
 };
 
 window.mouseClick = {
@@ -28,21 +29,12 @@ window.mouseClick = {
 
 var distance; 
 var elapsed = 0.01;
-var background = new Image();
 
-function wallHandler(){
-	const rooms = {
-		topLeft: {},
-		topRight: {},
-		bottomLeft: {},
-		bottomRight: {}
-	};
-}
 window.onload = function() {
 	SC.initialize({
 		client_id: '048fd098861b5d45aabb3862e9e81832'
 	})
-}
+};
 
 function playMusic(genre) {
 	console.log(genre);
@@ -63,51 +55,61 @@ var App = React.createClass({
 	},
 
 	stateHandler: function(inRoom){
+
 		this.setState({room: inRoom})
 	},
 
 	init: function() {
-		var datsa = this.props.data;
-		console.log(datsa.room1)
-		for (var index in datsa.room1) {
-			console.log(datsa.room1[index]);
-		}
-
 		game = document.getElementById("myCanvas");
 		context = game.getContext("2d");
 		context.canvas.height = 720;
 		context.canvas.width = 1280;
-
-		/* Background image function */
-		background.src = "src/graphics/background1.jpg";
-
 	},
 
 	update: function(){
+		var prevPosX = user.posX;
+		var prevPosY = user.posY;
 		context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-		context.drawImage(background,0,0);
-		
+		if (!user.collision){
 		if(user.moving === true){
 			user.posX += user.directionX * user.speed * elapsed;
 			user.posY += user.directionY * user.speed * elapsed;
 			this.collision();
+			if( user.collision ) { // ooops !
+				user.posX = prevPosX;
+				user.posY = prevPosY;                
+			}
 			if(user.posX >= mouseClick.x -5 && user.posX <= mouseClick.x + 5 && user.posY >= mouseClick.y -5 && user.posY <= mouseClick.y + 5){
 				user.moving = false;
 			}
+			
+		}
 		}
 		this.drawUser();
 		this.drawWalls();
 	},
 
+
 	collision: function(){
 
-		if ((user.posX <= 300) && (user.posY <= 300)){
-			this.stateHandler("techo");
+		for (var i = 0; i < this.props.data.length; i++){
+			if (user.posX + 12.5 > this.props.data[i].x1 && user.posX - 12.5 < this.props.data[i].x2 && 
+				user.posY + 12.5 > this.props.data[i].y1 && user.posY - 12.5 < this.props.data[i].y2)
+		{
+			user.collision = true;
+		 }
+		}
+
+
+
+		if ((user.posX <= 400) && (user.posY <= 200)){
+			this.stateHandler("room1");
 			if (user.inRoom === false){
 				playMusic('techno');
 				user.inRoom = true;
 			}
 		}
+
 	},
 
 	drawUser: function(){
@@ -115,87 +117,44 @@ var App = React.createClass({
 		context.arc(user.posX, user.posY, user.sizeX, 0, 2*Math.PI);
 		context.fillStyle = "#c31b48";
 		context.fill();
-	},
-
-	drawWalls: function(){
-
-
-		/* Shadow */
-		context.save();
-		context.shadowColor   = '#666';
-		context.shadowOffsetX = 8;
-		context.shadowOffsetY = 8;
-		context.shadowBlur    = 5;
-
-		/* Line width and style */
-		context.lineWidth = 15;
-		context.strokeStyle = '#fff';
-
-
-		/* Room 1 Top Left */
-		context.beginPath();
-		context.moveTo(500,100); //(Top-pos,length)
-		context.lineTo(500,0);	//(Bottom-pos, margin-top)
-
-
-		context.moveTo(500,300);
-		context.lineTo(500,200);
-
-		context.moveTo(507,300);
-		context.lineTo(0,300);
-
-		/* Room 2 Top Right */
-		context.moveTo(800,300);
-		context.lineTo(1100,300);
-
-		context.moveTo(1200,300);
-		context.lineTo(1280,300);
-
-		context.moveTo(807,307);
-		context.lineTo(807,0);
-
-		/* Room 3 Bottom Left */
-		context.moveTo(0,450);
-		context.lineTo(400,450);
-
-		context.moveTo(500,442);
-		context.lineTo(500,768);
-
-		/* Room 4 Bottom Right */
-		context.moveTo(800,450);
-		context.lineTo(1280,450);
-
-		context.moveTo(807,442);
-		context.lineTo(807,608);
-
-		context.moveTo(807, 698);
-		context.lineTo(807, 768);
-		context.stroke();
-
-		/* End shadow */
-		context.restore();
+//		var img = new Image();
+//		img.src = 'src/graphics/megamanShot32.png';
+//		context.drawImage(img, user.posX, user.posY, user.sizeX, user.sizeY);
 	},
 
 	handleMouseClick: function(event){
-		console.log(user.directionX);
-//		console.log(user.directionY);
+
+
 		var rect = game.getBoundingClientRect();
 		mouseClick.y = event.nativeEvent.clientY - rect.top;
 		mouseClick.x = event.nativeEvent.clientX - rect.left;
 		distance = Math.sqrt(Math.pow(mouseClick.x - user.posX, 2) + Math.pow(mouseClick.y - user.posY,2));
 		user.directionX = (mouseClick.x - user.posX) / distance;
 		user.directionY = (mouseClick.y - user.posY) / distance;
-		user.moving = true
+		if (user.collision = true){
+			user.collision = false;
+		}
+		user.moving = true;
+
 	},
 	
 	componentDidMount: function() {
 		this.init();
 		setInterval(this.update, this.props.interval);
 	},
+
+
 	render: function() {
+
+
+		var canvasClasses = classNames(
+			"test1",
+			"test2"
+		);
+
 		return (
 			<div>
-				<div id="soundResult"></div>
+				<div id="soundResult" className={canvasClasses}></div>
 				<canvas id="myCanvas" onClick={this.handleMouseClick} className={this.state.room}></canvas>
 			</div>
 		);
@@ -203,5 +162,5 @@ var App = React.createClass({
 });
 
 ReactDOM.render(
-	<App interval={25} data={metaData}/>, document.getElementById('app')
+	<App interval={10} data={walls}/>, document.getElementById('app')
 );
