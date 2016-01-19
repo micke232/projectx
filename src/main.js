@@ -177,7 +177,8 @@ var App = React.createClass({
 	},
 
 	handleMouseClick: function(event){
-		
+		console.log(user.directionX);
+//		console.log(user.directionY);
 		var rect = game.getBoundingClientRect();
 		mouseClick.y = event.nativeEvent.clientY - rect.top;
 		mouseClick.x = event.nativeEvent.clientX - rect.left;
