@@ -8,7 +8,7 @@ var context;
 var walls = require("json!./data/data.json");
 
 window.user = {
-	speed: 500,
+	speed: 300,
 	posY: 350,
 	posX: 600,
 	sizeY: 12.5,
@@ -71,37 +71,29 @@ var App = React.createClass({
 		var prevPosY = user.posY;
 		context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 		if (!user.collision){
-		if(user.moving === true){
-			user.posX += user.directionX * user.speed * elapsed;
-			user.posY += user.directionY * user.speed * elapsed;
-			this.collision();
-			if( user.collision ) { // ooops !
-				user.posX = prevPosX;
-				user.posY = prevPosY;                
+			if(user.moving === true){
+				user.posX += user.directionX * user.speed * elapsed;
+				user.posY += user.directionY * user.speed * elapsed;
+				this.collision();
+				if( user.collision ) { // ooops !
+					user.posX = prevPosX;
+					user.posY = prevPosY;                
+				}
+				if(user.posX >= mouseClick.x -5 && user.posX <= mouseClick.x + 5 && user.posY >= mouseClick.y -5 && user.posY <= mouseClick.y + 5){
+					user.moving = false;
+				}
 			}
-			if(user.posX >= mouseClick.x -5 && user.posX <= mouseClick.x + 5 && user.posY >= mouseClick.y -5 && user.posY <= mouseClick.y + 5){
-				user.moving = false;
-			}
-			
-		}
 		}
 		this.drawUser();
-		this.drawWalls();
 	},
 
-
 	collision: function(){
-
 		for (var i = 0; i < this.props.data.length; i++){
 			if (user.posX + 12.5 > this.props.data[i].x1 && user.posX - 12.5 < this.props.data[i].x2 && 
-				user.posY + 12.5 > this.props.data[i].y1 && user.posY - 12.5 < this.props.data[i].y2)
-		{
-			user.collision = true;
-		 }
+					user.posY + 12.5 > this.props.data[i].y1 && user.posY - 12.5 < this.props.data[i].y2){
+				user.collision = true;
+			}
 		}
-
-
-
 		if ((user.posX <= 400) && (user.posY <= 200)){
 			this.stateHandler("room1");
 			if (user.inRoom === false){
@@ -109,7 +101,6 @@ var App = React.createClass({
 				user.inRoom = true;
 			}
 		}
-
 	},
 
 	drawUser: function(){
@@ -117,14 +108,13 @@ var App = React.createClass({
 		context.arc(user.posX, user.posY, user.sizeX, 0, 2*Math.PI);
 		context.fillStyle = "#c31b48";
 		context.fill();
-//		var img = new Image();
-//		img.src = 'src/graphics/megamanShot32.png';
-//		context.drawImage(img, user.posX, user.posY, user.sizeX, user.sizeY);
+		//		var img = new Image();
+		//		img.src = 'src/graphics/megamanShot32.png';
+		//		context.drawImage(img, user.posX, user.posY, user.sizeX, user.sizeY);
 	},
 
 	handleMouseClick: function(event){
-
-
+		
 		var rect = game.getBoundingClientRect();
 		mouseClick.y = event.nativeEvent.clientY - rect.top;
 		mouseClick.x = event.nativeEvent.clientX - rect.left;
@@ -135,9 +125,8 @@ var App = React.createClass({
 			user.collision = false;
 		}
 		user.moving = true;
-
 	},
-	
+
 	componentDidMount: function() {
 		this.init();
 		setInterval(this.update, this.props.interval);
@@ -145,17 +134,10 @@ var App = React.createClass({
 
 
 	render: function() {
-
-
-		var canvasClasses = classNames(
-			"test1",
-			"test2"
-		);
-
 		return (
 			<div>
-				<div id="soundResult" className={canvasClasses}></div>
-				<canvas id="myCanvas" onClick={this.handleMouseClick} className={this.state.room}></canvas>
+			<div id="soundResult"></div>
+			<canvas id="myCanvas" onClick={this.handleMouseClick} className={this.state.room}></canvas>
 			</div>
 		);
 	}
