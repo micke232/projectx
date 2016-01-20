@@ -113,7 +113,7 @@ var App = React.createClass({
 		}
 		}
 		this.drawUser();
-		this.drawWalls();
+		/*this.drawWalls();*/
 	},
 
 
