@@ -3,6 +3,7 @@ const React = require("react");
 const ReactDOM = require("react-dom");
 const classNames = require('classnames');
 require("./sass/style.scss");
+var musicPlayer;
 var game;
 var context;
 var walls = require("json!./data/data.json");
@@ -29,23 +30,43 @@ window.mouseClick = {
 
 var distance; 
 var elapsed = 0.01;
+var background = new Image();
 
-window.onload = function() {
+function wallHandler(){
+	const rooms = {
+		topLeft: {},
+		topRight: {},
+		bottomLeft: {},
+		bottomRight: {}
+	};
+}
+
+window.onload = function(){
 	SC.initialize({
 		client_id: '048fd098861b5d45aabb3862e9e81832'
 	})
 };
+function loadTrack(trackID){
+	/*musicPlayer.pause();*/
 
-function playMusic(genre) {
-	console.log(genre);
-	SC.get('/tracks',
-				 {genres: genre},
-				 function(tracks){
-		console.log(tracks);
-		var random = Math.floor(Math.random() * tracks.length);
-		SC.oEmbed(tracks[random].uri, {auto_play: true}, document.getElementById('soundResult'));
+	SC.stream('/tracks/' + trackID, function(s){
+		musicPlayer = s;
+		musicPlayer.play();
 	});
 }
+
+/*
+function playMusic(genre){
+	console.log(genre);
+	SC.get('/tracks',
+		{genres: genre},
+		function(tracks){
+			console.log(tracks);
+			var random = Math.floor(Math.random() * tracks.length);
+			SC.oEmbed(tracks[random].uri, {auto_play: true, show_comments: false, maxheight: 70, maxwidth: 600}, document.getElementById('soundResult'));
+		});
+}
+*/
 
 var App = React.createClass({
 	getInitialState: function() {
@@ -60,6 +81,12 @@ var App = React.createClass({
 	},
 
 	init: function() {
+		var datsa = this.props.data;
+		console.log(datsa.room1);
+		for (var index in datsa.room1) {
+			console.log(datsa.room1[index]);
+		}
+
 		game = document.getElementById("myCanvas");
 		context = game.getContext("2d");
 		context.canvas.height = 720;
@@ -86,7 +113,7 @@ var App = React.createClass({
 		}
 		}
 		this.drawUser();
-		this.drawWalls();
+		/*this.drawWalls();*/
 	},
 
 
@@ -100,12 +127,11 @@ var App = React.createClass({
 		 }
 		}
 
-
-
 		if ((user.posX <= 400) && (user.posY <= 200)){
 			this.stateHandler("room1");
 			if (user.inRoom === false){
-				playMusic('techno');
+				/*playMusic('techno');*/
+				loadTrack('294');
 				user.inRoom = true;
 			}
 		}
