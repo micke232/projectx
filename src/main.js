@@ -7,6 +7,7 @@ var musicPlayer;
 var game;
 var context;
 var walls = require("json!./data/data.json");
+var triggers = require("json!./data/triggers.json");
 
 window.user = {
 	speed: 500,
@@ -47,26 +48,16 @@ window.onload = function(){
 	})
 };
 function loadTrack(trackID){
-	/*musicPlayer.pause();*/
-
-	SC.stream('/tracks/' + trackID, function(s){
-		musicPlayer = s;
-		musicPlayer.play();
+	SC.stream('/tracks/' + trackID, function(track){
+		musicPlayer = track;
+		if (user.inRoom == true){
+			musicPlayer.play();
+		}
+		if (user.inRoom == false){
+			musicPlayer.pause();
+		}
 	});
 }
-
-/*
-function playMusic(genre){
-	console.log(genre);
-	SC.get('/tracks',
-		{genres: genre},
-		function(tracks){
-			console.log(tracks);
-			var random = Math.floor(Math.random() * tracks.length);
-			SC.oEmbed(tracks[random].uri, {auto_play: true, show_comments: false, maxheight: 70, maxwidth: 600}, document.getElementById('soundResult'));
-		});
-}
-*/
 
 var App = React.createClass({
 	getInitialState: function() {
@@ -98,22 +89,21 @@ var App = React.createClass({
 		var prevPosY = user.posY;
 		context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 		if (!user.collision){
-		if(user.moving === true){
-			user.posX += user.directionX * user.speed * elapsed;
-			user.posY += user.directionY * user.speed * elapsed;
-			this.collision();
-			if( user.collision ) { // ooops !
-				user.posX = prevPosX;
-				user.posY = prevPosY;                
+			if(user.moving === true){
+				user.posX += user.directionX * user.speed * elapsed;
+				user.posY += user.directionY * user.speed * elapsed;
+				this.collision();
+				if( user.collision ) { // ooops !
+					user.posX = prevPosX;
+					user.posY = prevPosY;
+				}
+				if(user.posX >= mouseClick.x -5 && user.posX <= mouseClick.x + 5 && user.posY >= mouseClick.y -5 && user.posY <= mouseClick.y + 5){
+					user.moving = false;
+				}
+
 			}
-			if(user.posX >= mouseClick.x -5 && user.posX <= mouseClick.x + 5 && user.posY >= mouseClick.y -5 && user.posY <= mouseClick.y + 5){
-				user.moving = false;
-			}
-			
-		}
 		}
 		this.drawUser();
-		/*this.drawWalls();*/
 	},
 
 
@@ -121,20 +111,57 @@ var App = React.createClass({
 
 		for (var i = 0; i < this.props.data.length; i++){
 			if (user.posX + 12.5 > this.props.data[i].x1 && user.posX - 12.5 < this.props.data[i].x2 && 
-				user.posY + 12.5 > this.props.data[i].y1 && user.posY - 12.5 < this.props.data[i].y2)
-		{
-			user.collision = true;
-		 }
+				user.posY + 12.5 > this.props.data[i].y1 && user.posY - 12.5 < this.props.data[i].y2){
+					user.collision = true;
+		 		}
+		}
+
+		for (var i = 0; i < this.props.triggers.length; i++){
+			if (user.posX + 12.5 > this.props.triggers[i].x1 && user.posX - 12.5 < this.props.triggers[i].x2 &&
+				user.posY + 12.5 > this.props.triggers[i].y1 && user.posY - 12.5 < this.props.triggers[i].y2){
+					user.inRoom = false;
+					this.stateHandler('notInRoom');
+					loadTrack();
+		 		}
 		}
 
 		if ((user.posX <= 400) && (user.posY <= 200)){
-			this.stateHandler("room1");
+			this.stateHandler("room1"); /* techno */
 			if (user.inRoom === false){
-				/*playMusic('techno');*/
-				loadTrack('294');
 				user.inRoom = true;
+				console.log('room1 techno');
+				loadTrack('164932466'); /* detroit techno militia - the grid (ep36) */
 			}
 		}
+
+		if ((user.posX >= 880) && (user.posY <= 200)){
+			this.stateHandler("room2"); /* indie - ändra till rock? */
+			if (user.inRoom === false){
+				user.inRoom = true;
+				console.log('room2 indie');
+				loadTrack('14615470');	/* woods - suffering season */
+			}
+		}
+
+		if ((user.posX <= 400) && (user.posY >= 425)){
+			this.stateHandler("room3"); /* house */
+			if (user.inRoom === false){
+				user.inRoom = true;
+				console.log('room3 house');
+				loadTrack('66673724'); /* octo octa - memories */
+			}
+		}
+
+		if ((user.posX >= 880) && (user.posY >= 425)){
+			this.stateHandler("room4"); /* pop */
+			if (user.inRoom === false){
+				user.inRoom = true;
+				console.log('room4 pop');
+				loadTrack('187135056'); /* laser & bas - dansa så */
+			}
+		}
+
+
 
 	},
 
@@ -188,5 +215,5 @@ var App = React.createClass({
 });
 
 ReactDOM.render(
-	<App interval={10} data={walls}/>, document.getElementById('app')
+	<App interval={10} data={walls} triggers={triggers}/>, document.getElementById('app')
 );
