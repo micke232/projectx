@@ -10,7 +10,7 @@ var walls = require("json!./data/data.json");
 var triggers = require("json!./data/triggers.json");
 
 window.user = {
-	speed: 500,
+	speed: 300,
 	posY: 350,
 	posX: 600,
 	sizeY: 12.5,
@@ -32,37 +32,68 @@ window.mouseClick = {
 
 var distance; 
 var elapsed = 0.01;
+var background = new Image();
 
-window.onload = function() {
+function wallHandler(){
+	const rooms = {
+		topLeft: {},
+		topRight: {},
+		bottomLeft: {},
+		bottomRight: {}
+	};
+}
+
+window.onload = function(){
 	SC.initialize({
 		client_id: '048fd098861b5d45aabb3862e9e81832'
 	})
 };
+function loadTrack(trackID){
+	/*musicPlayer.pause();*/
+
+	SC.stream('/tracks/' + trackID, function(s){
+		musicPlayer = s;
+		musicPlayer.play();
+	});
+}
+
 
 var currentTrack;
 var techno = [
 	'164932466',
+	'187135056',
 	'66673724',
 	'174690565',
-	'110719285'
+	'110719285',
+	'236799491',
+	'124388199'
 ];
 var indie = [
 	'164932466',
+	'187135056',
 	'66673724',
 	'174690565',
-	'110719285'
+	'110719285',
+	'236799491',
+	'124388199'
 ];
 var house = [
 	'164932466',
+	'187135056',
 	'66673724',
 	'174690565',
-	'110719285'
+	'110719285',
+	'236799491',
+	'124388199'
 ];
 var pop = [
 	'164932466',
+	'187135056',
 	'66673724',
 	'174690565',
-	'110719285'
+	'110719285',
+	'236799491',
+	'124388199'
 ];
 
 function loadTrack(trackID){
@@ -86,6 +117,12 @@ var App = React.createClass({
 	},
 
 	init: function() {
+		var datsa = this.props.data;
+		console.log(datsa.room1);
+		for (var index in datsa.room1) {
+			console.log(datsa.room1[index]);
+		}
+
 		game = document.getElementById("myCanvas");
 		context = game.getContext("2d");
 		context.canvas.height = 720;
@@ -108,7 +145,6 @@ var App = React.createClass({
 				if(user.posX >= mouseClick.x -5 && user.posX <= mouseClick.x + 5 && user.posY >= mouseClick.y -5 && user.posY <= mouseClick.y + 5){
 					user.moving = false;
 				}
-
 			}
 		}
 		if ((this.state.room === 'room1' || 'room2' || 'room3' || 'room4') && user.inRoom === true && user.playingMusic === false){
@@ -119,15 +155,14 @@ var App = React.createClass({
 			musicPlayer.pause();
 			user.inRoom = false;
 			user.playingMusic = false;
+
 		}
 		this.drawUser();
 	},
 
-
 	collision: function(){
-
 		for (var i = 0; i < this.props.data.length; i++){
-			if (user.posX + 12.5 > this.props.data[i].x1 && user.posX - 12.5 < this.props.data[i].x2 && 
+			if (user.posX + 12.5 > this.props.data[i].x1 && user.posX - 12.5 < this.props.data[i].x2 &&
 				user.posY + 12.5 > this.props.data[i].y1 && user.posY - 12.5 < this.props.data[i].y2){
 					user.collision = true;
 		 		}
@@ -167,6 +202,7 @@ var App = React.createClass({
 			this.stateHandler("room4");
 			user.inRoom = true;
 		}
+
 	},
 
 	drawUser: function(){
@@ -174,14 +210,13 @@ var App = React.createClass({
 		context.arc(user.posX, user.posY, user.sizeX, 0, 2*Math.PI);
 		context.fillStyle = "#c31b48";
 		context.fill();
-//		var img = new Image();
-//		img.src = 'src/graphics/megamanShot32.png';
-//		context.drawImage(img, user.posX, user.posY, user.sizeX, user.sizeY);
+		//		var img = new Image();
+		//		img.src = 'src/graphics/megamanShot32.png';
+		//		context.drawImage(img, user.posX, user.posY, user.sizeX, user.sizeY);
 	},
 
 	handleMouseClick: function(event){
-
-
+		
 		var rect = game.getBoundingClientRect();
 		mouseClick.y = event.nativeEvent.clientY - rect.top;
 		mouseClick.x = event.nativeEvent.clientX - rect.left;
@@ -192,9 +227,8 @@ var App = React.createClass({
 			user.collision = false;
 		}
 		user.moving = true;
-
 	},
-	
+
 	componentDidMount: function() {
 		this.init();
 		setInterval(this.update, this.props.interval);
@@ -202,17 +236,10 @@ var App = React.createClass({
 
 
 	render: function() {
-
-
-		var canvasClasses = classNames(
-			"test1",
-			"test2"
-		);
-
 		return (
 			<div>
-				<div id="soundResult" className={canvasClasses}></div>
-				<canvas id="myCanvas" onClick={this.handleMouseClick} className={this.state.room}></canvas>
+			<div id="soundResult"></div>
+			<canvas id="myCanvas" onClick={this.handleMouseClick} className={this.state.room}></canvas>
 			</div>
 		);
 	}
