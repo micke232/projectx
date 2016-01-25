@@ -10,8 +10,6 @@ var walls = require("json!./data/data.json");
 var triggers = require("json!./data/triggers.json");
 var loadImages = require('load-images');
 
-
-
 window.user = {
 	speed: 250,
 	posY: 350,
@@ -60,8 +58,6 @@ window.onload = function(){
 	})
 };
 function loadTrack(trackID){
-	/*musicPlayer.pause();*/
-
 	SC.stream('/tracks/' + trackID, function(s){
 		musicPlayer = s;
 		musicPlayer.play();
