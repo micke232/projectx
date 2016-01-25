@@ -218,7 +218,7 @@ var App = React.createClass({
 		if (user.imageDirection === "left") x = 'right.png';
 		if (user.moving === false) x = 'still.png';
 
-		context.drawImage(user.images[x], user.posX - 18, user.posY - 45, 37, 91);
+		context.drawImage(user.images[x], user.posX - 18, user.posY - 91, 37, 91);
 	},
 
 	handleMouseClick: function(event){
