@@ -6,11 +6,12 @@ html, body {
 	background-color: #000000;
 }
 
-
 #myCanvas {
+  	margin-top:40px;
 	position:absolute;
 	top:50%;
 	left:50%;
+  	z-index:1;
 	-webkit-transform: translate(-50%, -50%);
 	-moz-transform: translate(-50%, -50%);
 	-ms-transform: translate(-50%, -50%);
@@ -19,8 +20,16 @@ html, body {
 }
 
 #soundResult {
-	position: absolute;
-	height: 300px;
+  	z-index:99;
+  	margin: 0 auto;
+	position: relative;
+	height: 50px;
+	width: 600px;
+}
+
+#soundResult iframe {
+  	margin: 0 auto;
+  	left: 50%;
 }
 
 
