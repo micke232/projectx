@@ -73,7 +73,6 @@ var inRoom = "notInRoom";
 
 		return that;
 	}
-//	that.context.drawImage(that.image, frameIndex * that.width / numberOfFrames, 0, that.width / numberOfFrames, that.height, 0, 0, that.width / numberOfFrames, that.height);
 	// Get canvas
 	context = document.getElementById("myCanvas");
 

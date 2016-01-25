@@ -25,21 +25,21 @@ window.user = {
 	inRoom: false,
 	collision: false,
 	playingMusic: false,
-  	imageDirection: "still"
+	imageDirection: "still"
 };
 var userImage = new Image();
 
 
 loadImages([
-		"./src/graphics/left.png",
-		"./src/graphics/right.png",
-		"./src/graphics/still.png",
-		"./src/graphics/room1.png",
-		"./src/graphics/room2.png",
-		"./src/graphics/room3.png",
-		"./src/graphics/room4.png",
-		"./src/graphics/notinroom.png"
-	], function(err, images){
+	"./src/graphics/left.png",
+	"./src/graphics/right.png",
+	"./src/graphics/still.png",
+	"./src/graphics/room1.png",
+	"./src/graphics/room2.png",
+	"./src/graphics/room3.png",
+	"./src/graphics/room4.png",
+	"./src/graphics/notinroom.png"
+], function(err, images){
 	console.log(err, images);
 	user.images = images;
 });
@@ -135,12 +135,12 @@ var App = React.createClass({
 
 		game = document.getElementById("myCanvas");
 		context = game.getContext("2d");
-		
+
 
 		context.canvas.height = 720;
 		context.canvas.width = 1280;
 	},
-  
+
 	update: function(){
 		var prevPosX = user.posX;
 		var prevPosY = user.posY;
@@ -167,22 +167,22 @@ var App = React.createClass({
 			musicPlayer.pause();
 			user.inRoom = false;
 			user.playingMusic = false;
-
 		}
 		this.drawUser();
 	},
 
 	collision: function(){
+		var XY = 6;
 		for (var i = 0; i < this.props.data.length; i++){
-			if (user.posX + 12.5 > this.props.data[i].x1 && user.posX - 12.5 < this.props.data[i].x2 &&
-					user.posY + 12.5 > this.props.data[i].y1 && user.posY - 12.5 < this.props.data[i].y2){
+			if (user.posX + XY > this.props.data[i].x1 && user.posX - XY < this.props.data[i].x2 &&
+					user.posY + XY > this.props.data[i].y1 && user.posY - XY < this.props.data[i].y2){
 				user.collision = true;
 			}
 		}
 
 		for (var i = 0; i < this.props.triggers.length; i++){
-			if (user.posX + 12.5 > this.props.triggers[i].x1 && user.posX - 12.5 < this.props.triggers[i].x2 &&
-					user.posY + 12.5 > this.props.triggers[i].y1 && user.posY - 12.5 < this.props.triggers[i].y2){
+			if (user.posX + XY > this.props.triggers[i].x1 && user.posX - XY < this.props.triggers[i].x2 &&
+					user.posY + XY > this.props.triggers[i].y1 && user.posY - XY < this.props.triggers[i].y2){
 				this.stateHandler('notInRoom');
 				inRoom = "notInRoom";
 			}
@@ -228,14 +228,7 @@ var App = React.createClass({
 		if (user.imageDirection === "right") x = 'left.png';
 		if (user.imageDirection === "left") x = 'right.png';
 		if (user.moving === false) x = 'still.png';
-
-		context.drawImage(user.images[x], user.posX - 18, user.posY - 91, 37, 91);
-		
-		
-		
-		
-		
-		
+		context.drawImage(user.images[x], user.posX - 18, user.posY - 85, 37, 91);
 	},
 
 	handleMouseClick: function(event){
@@ -245,11 +238,11 @@ var App = React.createClass({
 		distance = Math.sqrt(Math.pow(mouseClick.x - user.posX, 2) + Math.pow(mouseClick.y - user.posY,2));
 		user.directionX = (mouseClick.x - user.posX) / distance;
 		user.directionY = (mouseClick.y - user.posY) / distance;
-		
+
 		if (user.directionX < 0){
 			user.imageDirection = "right";
 		}
-		
+
 		if (user.directionX > 0){
 			user.imageDirection = "left";
 		}
@@ -264,8 +257,6 @@ var App = React.createClass({
 		this.init();
 		setInterval(this.update, this.props.interval);
 	},
-
-
 
 	render: function() {
 		return (
