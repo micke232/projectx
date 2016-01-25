@@ -21,7 +21,8 @@ window.user = {
 	checkPosY: NaN,
 	moving: false,
 	inRoom: false,
-	collision: false
+	collision: false,
+	playingMusic: false
 };
 
 window.mouseClick = {
@@ -31,32 +32,46 @@ window.mouseClick = {
 
 var distance; 
 var elapsed = 0.01;
-var background = new Image();
 
-function wallHandler(){
-	const rooms = {
-		topLeft: {},
-		topRight: {},
-		bottomLeft: {},
-		bottomRight: {}
-	};
-}
-
-window.onload = function(){
+window.onload = function() {
 	SC.initialize({
 		client_id: '048fd098861b5d45aabb3862e9e81832'
 	})
 };
+
+var currentTrack;
+var techno = [
+	'164932466',
+	'66673724',
+	'174690565',
+	'110719285'
+];
+var indie = [
+	'164932466',
+	'66673724',
+	'174690565',
+	'110719285'
+];
+var house = [
+	'164932466',
+	'66673724',
+	'174690565',
+	'110719285'
+];
+var pop = [
+	'164932466',
+	'66673724',
+	'174690565',
+	'110719285'
+];
+
 function loadTrack(trackID){
-	SC.stream('/tracks/' + trackID, function(track){
-		musicPlayer = track;
-		if (user.inRoom == true){
+	if (user.inRoom === true) {
+		SC.stream('/tracks/' + trackID, function(track){
+			musicPlayer = track;
 			musicPlayer.play();
-		}
-		if (user.inRoom == false){
-			musicPlayer.pause();
-		}
-	});
+		});
+	}
 }
 
 var App = React.createClass({
@@ -67,17 +82,10 @@ var App = React.createClass({
 	},
 
 	stateHandler: function(inRoom){
-
 		this.setState({room: inRoom})
 	},
 
 	init: function() {
-		var datsa = this.props.data;
-		console.log(datsa.room1);
-		for (var index in datsa.room1) {
-			console.log(datsa.room1[index]);
-		}
-
 		game = document.getElementById("myCanvas");
 		context = game.getContext("2d");
 		context.canvas.height = 720;
@@ -103,6 +111,15 @@ var App = React.createClass({
 
 			}
 		}
+		if ((this.state.room === 'room1' || 'room2' || 'room3' || 'room4') && user.inRoom === true && user.playingMusic === false){
+			loadTrack(currentTrack);
+			user.playingMusic = true;
+		}
+		if (this.state.room === 'notInRoom' && user.inRoom === true){
+			musicPlayer.pause();
+			user.inRoom = false;
+			user.playingMusic = false;
+		}
 		this.drawUser();
 	},
 
@@ -119,50 +136,37 @@ var App = React.createClass({
 		for (var i = 0; i < this.props.triggers.length; i++){
 			if (user.posX + 12.5 > this.props.triggers[i].x1 && user.posX - 12.5 < this.props.triggers[i].x2 &&
 				user.posY + 12.5 > this.props.triggers[i].y1 && user.posY - 12.5 < this.props.triggers[i].y2){
-					user.inRoom = false;
 					this.stateHandler('notInRoom');
-					loadTrack();
 		 		}
 		}
 
-		if ((user.posX <= 400) && (user.posY <= 200)){
-			this.stateHandler("room1"); /* techno */
-			if (user.inRoom === false){
-				user.inRoom = true;
-				console.log('room1 techno');
-				loadTrack('164932466'); /* detroit techno militia - the grid (ep36) */
-			}
+		if (user.posX < this.props.triggers[0].x1 && user.posY < this.props.triggers[0].y2){
+			var x = Math.floor(techno.length * Math.random());
+			currentTrack = techno[x];
+			this.stateHandler("room1");
+			user.inRoom = true;
 		}
 
-		if ((user.posX >= 880) && (user.posY <= 200)){
-			this.stateHandler("room2"); /* indie - ändra till rock? */
-			if (user.inRoom === false){
-				user.inRoom = true;
-				console.log('room2 indie');
-				loadTrack('14615470');	/* woods - suffering season */
-			}
+		if ((user.posX > this.props.triggers[1].x2) && (user.posY < this.props.triggers[1].y2)){
+			var x = Math.floor(indie.length * Math.random());
+			currentTrack = indie[x];
+			this.stateHandler("room2");
+			user.inRoom = true;
 		}
 
-		if ((user.posX <= 400) && (user.posY >= 425)){
-			this.stateHandler("room3"); /* house */
-			if (user.inRoom === false){
-				user.inRoom = true;
-				console.log('room3 house');
-				loadTrack('66673724'); /* octo octa - memories */
-			}
+		if ((user.posX < this.props.triggers[2].x2) && (user.posY > this.props.triggers[2].y2)){
+			var x = Math.floor(house.length * Math.random());
+			currentTrack = house[x];
+			this.stateHandler("room3");
+			user.inRoom = true;
 		}
 
-		if ((user.posX >= 880) && (user.posY >= 425)){
-			this.stateHandler("room4"); /* pop */
-			if (user.inRoom === false){
-				user.inRoom = true;
-				console.log('room4 pop');
-				loadTrack('187135056'); /* laser & bas - dansa så */
-			}
+		if ((user.posX > this.props.triggers[3].x2) && (user.posY > this.props.triggers[3].y1)){
+			var x = Math.floor(pop.length * Math.random());
+			currentTrack = pop[x];
+			this.stateHandler("room4");
+			user.inRoom = true;
 		}
-
-
-
 	},
 
 	drawUser: function(){
