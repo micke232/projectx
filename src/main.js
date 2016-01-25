@@ -8,9 +8,10 @@ var game;
 var context;
 var walls = require("json!./data/data.json");
 var triggers = require("json!./data/triggers.json");
+var loadImages = require('load-images');
 
 window.user = {
-	speed: 300,
+	speed: 250,
 	posY: 350,
 	posX: 600,
 	sizeY: 12.5,
@@ -23,17 +24,23 @@ window.user = {
 	inRoom: false,
 	collision: false,
 	playingMusic: false,
-  imageDirection: "left",
-	sprite: [
-		"./src/graphics/left.png",
-		"./src/graphics/right.png",
-	]
+  	imageDirection: "still"
 };
 var userImage = new Image();
 
-
-
-
+loadImages([
+		"./src/graphics/left.png",
+		"./src/graphics/right.png",
+		"./src/graphics/still.png",
+		"./src/graphics/room1.png",
+		"./src/graphics/room2.png",
+		"./src/graphics/room3.png",
+		"./src/graphics/room4.png",
+		"./src/graphics/notinroom.png"
+	], function(err, images){
+	console.log(err, images);
+	user.images = images;
+});
 
 window.mouseClick = {
 	y: NaN,
@@ -51,14 +58,11 @@ window.onload = function(){
 	})
 };
 function loadTrack(trackID){
-	/*musicPlayer.pause();*/
-
 	SC.stream('/tracks/' + trackID, function(s){
 		musicPlayer = s;
 		musicPlayer.play();
 	});
 }
-
 
 var currentTrack;
 var techno = [
@@ -106,7 +110,6 @@ function loadTrack(trackID){
 		});
 	}
 }
-
 
 var App = React.createClass({
 	getInitialState: function() {
@@ -211,18 +214,14 @@ var App = React.createClass({
 	drawUser: function(){
 		var x = 0;
 		var imageDirection;
-		if (user.imageDirection === "right") x = 0
-		if (user.imageDirection === "left") x = 1
-		
-		userImage.src = user.sprite[x];
-		
-		context.drawImage(userImage, user.posX, user.posY, user.sizeX, user.sizeY);
+		if (user.imageDirection === "right") x = 'left.png';
+		if (user.imageDirection === "left") x = 'right.png';
+		if (user.moving === false) x = 'still.png';
+
+		context.drawImage(user.images[x], user.posX - 18, user.posY - 45, 37, 91);
 	},
 
 	handleMouseClick: function(event){
-		var prevPosX = user.posX * user.directionX;
-		var prevPosY = user.posY * user.directionY;
-		
 		var rect = game.getBoundingClientRect();
 		mouseClick.y = event.nativeEvent.clientY - rect.top;
 		mouseClick.x = event.nativeEvent.clientX - rect.left;
@@ -232,11 +231,11 @@ var App = React.createClass({
 		
 		if (user.directionX < 0){
 			user.imageDirection = "right";
-		}		
+		}
 		
 		if (user.directionX > 0){
 			user.imageDirection = "left";
-		}		
+		}
 
 		if (user.collision = true){
 			user.collision = false;
