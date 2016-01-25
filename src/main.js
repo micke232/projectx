@@ -22,8 +22,18 @@ window.user = {
 	moving: false,
 	inRoom: false,
 	collision: false,
-	playingMusic: false
+	playingMusic: false,
+  imageDirection: "left",
+	sprite: [
+		"./src/graphics/left.png",
+		"./src/graphics/right.png",
+	]
 };
+var userImage = new Image();
+
+
+
+
 
 window.mouseClick = {
 	y: NaN,
@@ -97,6 +107,7 @@ function loadTrack(trackID){
 	}
 }
 
+
 var App = React.createClass({
 	getInitialState: function() {
 		return {
@@ -120,7 +131,7 @@ var App = React.createClass({
 		context.canvas.height = 720;
 		context.canvas.width = 1280;
 	},
-
+  
 	update: function(){
 		var prevPosX = user.posX;
 		var prevPosY = user.posY;
@@ -155,16 +166,16 @@ var App = React.createClass({
 	collision: function(){
 		for (var i = 0; i < this.props.data.length; i++){
 			if (user.posX + 12.5 > this.props.data[i].x1 && user.posX - 12.5 < this.props.data[i].x2 &&
-				user.posY + 12.5 > this.props.data[i].y1 && user.posY - 12.5 < this.props.data[i].y2){
-					user.collision = true;
-		 		}
+					user.posY + 12.5 > this.props.data[i].y1 && user.posY - 12.5 < this.props.data[i].y2){
+				user.collision = true;
+			}
 		}
 
 		for (var i = 0; i < this.props.triggers.length; i++){
 			if (user.posX + 12.5 > this.props.triggers[i].x1 && user.posX - 12.5 < this.props.triggers[i].x2 &&
-				user.posY + 12.5 > this.props.triggers[i].y1 && user.posY - 12.5 < this.props.triggers[i].y2){
-					this.stateHandler('notInRoom');
-		 		}
+					user.posY + 12.5 > this.props.triggers[i].y1 && user.posY - 12.5 < this.props.triggers[i].y2){
+				this.stateHandler('notInRoom');
+			}
 		}
 
 		if (user.posX < this.props.triggers[0].x1 && user.posY < this.props.triggers[0].y2){
@@ -198,16 +209,19 @@ var App = React.createClass({
 	},
 
 	drawUser: function(){
-		context.beginPath();
-		context.arc(user.posX, user.posY, user.sizeX, 0, 2*Math.PI);
-		context.fillStyle = "#c31b48";
-		context.fill();
-		//		var img = new Image();
-		//		img.src = 'src/graphics/megamanShot32.png';
-		//		context.drawImage(img, user.posX, user.posY, user.sizeX, user.sizeY);
+		var x = 0;
+		var imageDirection;
+		if (user.imageDirection === "right") x = 0
+		if (user.imageDirection === "left") x = 1
+		
+		userImage.src = user.sprite[x];
+		
+		context.drawImage(userImage, user.posX, user.posY, user.sizeX, user.sizeY);
 	},
 
 	handleMouseClick: function(event){
+		var prevPosX = user.posX * user.directionX;
+		var prevPosY = user.posY * user.directionY;
 		
 		var rect = game.getBoundingClientRect();
 		mouseClick.y = event.nativeEvent.clientY - rect.top;
@@ -215,6 +229,15 @@ var App = React.createClass({
 		distance = Math.sqrt(Math.pow(mouseClick.x - user.posX, 2) + Math.pow(mouseClick.y - user.posY,2));
 		user.directionX = (mouseClick.x - user.posX) / distance;
 		user.directionY = (mouseClick.y - user.posY) / distance;
+		
+		if (user.directionX < 0){
+			user.imageDirection = "right";
+		}		
+		
+		if (user.directionX > 0){
+			user.imageDirection = "left";
+		}		
+
 		if (user.collision = true){
 			user.collision = false;
 		}
@@ -230,8 +253,8 @@ var App = React.createClass({
 	render: function() {
 		return (
 			<div>
-			<div id="soundResult"></div>
-			<canvas id="myCanvas" onClick={this.handleMouseClick} className={this.state.room}></canvas>
+				<div id="soundResult"></div>
+				<canvas id="myCanvas" onClick={this.handleMouseClick} className={this.state.room}></canvas>
 			</div>
 		);
 	}
