@@ -6,7 +6,6 @@ require("./sass/style.scss");
 var musicPlayer;
 var game;
 var context;
-
 var walls = require("json!./data/data.json");
 var triggers = require("json!./data/triggers.json");
 var loadImages = require('load-images');
@@ -235,6 +234,8 @@ var App = React.createClass({
 		var rect = game.getBoundingClientRect();
 		mouseClick.y = event.nativeEvent.clientY - rect.top;
 		mouseClick.x = event.nativeEvent.clientX - rect.left;
+		console.log(mouseClick.y + " y");
+		console.log(mouseClick.x+ " x");
 		distance = Math.sqrt(Math.pow(mouseClick.x - user.posX, 2) + Math.pow(mouseClick.y - user.posY,2));
 		user.directionX = (mouseClick.x - user.posX) / distance;
 		user.directionY = (mouseClick.y - user.posY) / distance;
