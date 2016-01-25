@@ -33,6 +33,21 @@ html, body {
   	left: 50%;
 }
 
+#pre1 {
+	background: url(../graphics/room1.png) no-repeat -9999px -9999px;
+}
+#pre2 {
+	background: url(../graphics/room2.png) no-repeat -9999px -9999px;
+}
+#pre3 {
+	background: url(../graphics/room3.png) no-repeat -9999px -9999px;
+}
+#pre4 {
+	background: url(../graphics/room4.png) no-repeat -9999px -9999px;
+}
+#pre5 {
+	background: url(../graphics/notinroom.png) no-repeat -9999px -9999px;
+}
 
 .room1 {
 	background-image: url(../graphics/room1.png);
@@ -47,5 +62,5 @@ html, body {
 	background-image: url(../graphics/room4.png);
 }
 .notInRoom {
-  background-image: url(../graphics/notinroom.png);
+  	background-image: url(../graphics/notinroom.png);
 }
