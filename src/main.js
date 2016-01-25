@@ -7,6 +7,7 @@ var musicPlayer;
 var game;
 var context;
 var walls = require("json!./data/data.json");
+var triggers = require("json!./data/triggers.json");
 
 window.user = {
 	speed: 300,
@@ -20,7 +21,8 @@ window.user = {
 	checkPosY: NaN,
 	moving: false,
 	inRoom: false,
-	collision: false
+	collision: false,
+	playingMusic: false
 };
 
 window.mouseClick = {
@@ -47,18 +49,53 @@ function loadTrack(trackID){
 	});
 }
 
-/*
-function playMusic(genre){
-	console.log(genre);
-	SC.get('/tracks',
-		{genres: genre},
-		function(tracks){
-			console.log(tracks);
-			var random = Math.floor(Math.random() * tracks.length);
-			SC.oEmbed(tracks[random].uri, {auto_play: true, show_comments: false, maxheight: 70, maxwidth: 600}, document.getElementById('soundResult'));
+
+var currentTrack;
+var techno = [
+	'164932466',
+	'187135056',
+	'66673724',
+	'174690565',
+	'110719285',
+	'236799491',
+	'124388199'
+];
+var indie = [
+	'164932466',
+	'187135056',
+	'66673724',
+	'174690565',
+	'110719285',
+	'236799491',
+	'124388199'
+];
+var house = [
+	'164932466',
+	'187135056',
+	'66673724',
+	'174690565',
+	'110719285',
+	'236799491',
+	'124388199'
+];
+var pop = [
+	'164932466',
+	'187135056',
+	'66673724',
+	'174690565',
+	'110719285',
+	'236799491',
+	'124388199'
+];
+
+function loadTrack(trackID){
+	if (user.inRoom === true) {
+		SC.stream('/tracks/' + trackID, function(track){
+			musicPlayer = track;
+			musicPlayer.play();
 		});
+	}
 }
-*/
 
 var App = React.createClass({
 	getInitialState: function() {
@@ -68,7 +105,6 @@ var App = React.createClass({
 	},
 
 	stateHandler: function(inRoom){
-
 		this.setState({room: inRoom})
 	},
 
@@ -96,32 +132,69 @@ var App = React.createClass({
 				this.collision();
 				if( user.collision ) { // ooops !
 					user.posX = prevPosX;
-					user.posY = prevPosY;                
+					user.posY = prevPosY;
 				}
 				if(user.posX >= mouseClick.x -5 && user.posX <= mouseClick.x + 5 && user.posY >= mouseClick.y -5 && user.posY <= mouseClick.y + 5){
 					user.moving = false;
 				}
 			}
 		}
+		if ((this.state.room === 'room1' || 'room2' || 'room3' || 'room4') && user.inRoom === true && user.playingMusic === false){
+			loadTrack(currentTrack);
+			user.playingMusic = true;
+		}
+		if (this.state.room === 'notInRoom' && user.inRoom === true){
+			musicPlayer.pause();
+			user.inRoom = false;
+			user.playingMusic = false;
+
+		}
 		this.drawUser();
 	},
 
 	collision: function(){
 		for (var i = 0; i < this.props.data.length; i++){
-			if (user.posX + 12.5 > this.props.data[i].x1 && user.posX - 12.5 < this.props.data[i].x2 && 
-					user.posY + 12.5 > this.props.data[i].y1 && user.posY - 12.5 < this.props.data[i].y2){
-				user.collision = true;
-			}
+			if (user.posX + 12.5 > this.props.data[i].x1 && user.posX - 12.5 < this.props.data[i].x2 &&
+				user.posY + 12.5 > this.props.data[i].y1 && user.posY - 12.5 < this.props.data[i].y2){
+					user.collision = true;
+		 		}
 		}
 
-		if ((user.posX <= 400) && (user.posY <= 200)){
-			this.stateHandler("room1");
-			if (user.inRoom === false){
-				/*playMusic('techno');*/
-				loadTrack('294');
-				user.inRoom = true;
-			}
+		for (var i = 0; i < this.props.triggers.length; i++){
+			if (user.posX + 12.5 > this.props.triggers[i].x1 && user.posX - 12.5 < this.props.triggers[i].x2 &&
+				user.posY + 12.5 > this.props.triggers[i].y1 && user.posY - 12.5 < this.props.triggers[i].y2){
+					this.stateHandler('notInRoom');
+		 		}
 		}
+
+		if (user.posX < this.props.triggers[0].x1 && user.posY < this.props.triggers[0].y2){
+			var x = Math.floor(techno.length * Math.random());
+			currentTrack = techno[x];
+			this.stateHandler("room1");
+			user.inRoom = true;
+		}
+
+		if ((user.posX > this.props.triggers[1].x2) && (user.posY < this.props.triggers[1].y2)){
+			var x = Math.floor(indie.length * Math.random());
+			currentTrack = indie[x];
+			this.stateHandler("room2");
+			user.inRoom = true;
+		}
+
+		if ((user.posX < this.props.triggers[2].x2) && (user.posY > this.props.triggers[2].y2)){
+			var x = Math.floor(house.length * Math.random());
+			currentTrack = house[x];
+			this.stateHandler("room3");
+			user.inRoom = true;
+		}
+
+		if ((user.posX > this.props.triggers[3].x2) && (user.posY > this.props.triggers[3].y1)){
+			var x = Math.floor(pop.length * Math.random());
+			currentTrack = pop[x];
+			this.stateHandler("room4");
+			user.inRoom = true;
+		}
+
 	},
 
 	drawUser: function(){
@@ -165,5 +238,5 @@ var App = React.createClass({
 });
 
 ReactDOM.render(
-	<App interval={10} data={walls}/>, document.getElementById('app')
+	<App interval={10} data={walls} triggers={triggers}/>, document.getElementById('app')
 );
