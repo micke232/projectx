@@ -32,14 +32,6 @@ var distance;
 var elapsed = 0.01;
 var background = new Image();
 
-function wallHandler(){
-	const rooms = {
-		topLeft: {},
-		topRight: {},
-		bottomLeft: {},
-		bottomRight: {}
-	};
-}
 
 window.onload = function(){
 	SC.initialize({
