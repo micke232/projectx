@@ -98,6 +98,8 @@ var inRoom = "notInRoom";
 				that.context.drawImage(that.image[5], frameIndex * that.width[5] / numberOfFrames[5], 0, that.width[5] / numberOfFrames[5], that.height[5], 909, 601, that.width[5] / numberOfFrames[5], that.height[5]);
 			}
 			if (inRoom === "notInRoom"){
+
+
 			}
 		};
 

@@ -14,8 +14,8 @@ window.user = {
 	speed: 250,
 	posY: 350,
 	posX: 600,
-	sizeY: 12.5,
-	sizeX: 12.5,
+	sizeY: 6,
+	sizeX: 6,
 	directionY: NaN,
 	directionX: NaN,
 	checkPosX: NaN,
@@ -227,7 +227,10 @@ var App = React.createClass({
 		if (user.imageDirection === "right") x = 'left.png';
 		if (user.imageDirection === "left") x = 'right.png';
 		if (user.moving === false) x = 'still.png';
+
+
 		context.drawImage(user.images[x], user.posX - 18, user.posY - 85, 37, 91);
+
 	},
 
 	handleMouseClick: function(event){
