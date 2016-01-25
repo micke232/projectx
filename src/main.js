@@ -6,6 +6,7 @@ require("./sass/style.scss");
 var musicPlayer;
 var game;
 var context;
+
 var walls = require("json!./data/data.json");
 var triggers = require("json!./data/triggers.json");
 var loadImages = require('load-images');
@@ -134,6 +135,8 @@ var App = React.createClass({
 
 		game = document.getElementById("myCanvas");
 		context = game.getContext("2d");
+		
+
 		context.canvas.height = 720;
 		context.canvas.width = 1280;
 	},
@@ -181,6 +184,7 @@ var App = React.createClass({
 			if (user.posX + 12.5 > this.props.triggers[i].x1 && user.posX - 12.5 < this.props.triggers[i].x2 &&
 					user.posY + 12.5 > this.props.triggers[i].y1 && user.posY - 12.5 < this.props.triggers[i].y2){
 				this.stateHandler('notInRoom');
+				inRoom = "notInRoom";
 			}
 		}
 
@@ -188,6 +192,7 @@ var App = React.createClass({
 			var x = Math.floor(techno.length * Math.random());
 			currentTrack = techno[x];
 			this.stateHandler("room1");
+			inRoom = "room1";
 			user.inRoom = true;
 		}
 
@@ -195,6 +200,7 @@ var App = React.createClass({
 			var x = Math.floor(indie.length * Math.random());
 			currentTrack = indie[x];
 			this.stateHandler("room2");
+			inRoom = "room2";
 			user.inRoom = true;
 		}
 
@@ -202,6 +208,7 @@ var App = React.createClass({
 			var x = Math.floor(house.length * Math.random());
 			currentTrack = house[x];
 			this.stateHandler("room3");
+			inRoom = "room3";
 			user.inRoom = true;
 		}
 
@@ -209,6 +216,7 @@ var App = React.createClass({
 			var x = Math.floor(pop.length * Math.random());
 			currentTrack = pop[x];
 			this.stateHandler("room4");
+			inRoom = "room4";
 			user.inRoom = true;
 		}
 
