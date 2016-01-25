@@ -31,10 +31,6 @@ window.user = {
 };
 var userImage = new Image();
 
-
-
-
-
 window.mouseClick = {
 	y: NaN,
 	x: NaN
@@ -51,7 +47,6 @@ window.onload = function(){
 	})
 };
 function loadTrack(trackID){
-	/*musicPlayer.pause();*/
 
 	SC.stream('/tracks/' + trackID, function(s){
 		musicPlayer = s;
