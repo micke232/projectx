@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server.js",
     "lint": "eslint src",
-    "deploy": "NODE_ENV=production webpack -p --config webpack.production.config.js"
+		"deploy": "webpack -p --config webpack.production.config.js"
   },
   "author": "",
   "license": "ISC",
@@ -33,6 +33,7 @@
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.6",
     "webpack": "^1.12.2",
+    "webpack-deploy": "productboard/webpack-deploy",
     "webpack-dev-server": "^1.12.1"
   },
   "dependencies": {
