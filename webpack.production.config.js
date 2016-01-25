@@ -30,6 +30,15 @@ var config = {
 							{
 								test: /\.jpg/,
 								loader: "url-loader?limit=10000&mimetype=image/jpg"
+							},
+							{ 
+								test: /\.js$/, 
+								exclude: /node_modules/, 
+								loader: "babel", 
+								query:
+								{
+									presets:['react']
+								}
 							}
 						 ]
 	}
