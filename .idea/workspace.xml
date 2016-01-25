@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="22ef725a-1382-4906-8fb3-a4cb6dbc0013" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/graphics/notinroom.png" afterPath="$PROJECT_DIR$/src/graphics/notinroom.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/graphics/room1.png" afterPath="$PROJECT_DIR$/src/graphics/room1.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/graphics/room2.png" afterPath="$PROJECT_DIR$/src/graphics/room2.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/graphics/room3.png" afterPath="$PROJECT_DIR$/src/graphics/room3.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/graphics/room4.png" afterPath="$PROJECT_DIR$/src/graphics/room4.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.js" afterPath="$PROJECT_DIR$/src/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sass/style.scss" afterPath="$PROJECT_DIR$/src/sass/style.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="22ef725a-1382-4906-8fb3-a4cb6dbc0013" name="Default" comment="" />
     <ignored path="projectx.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -35,8 +25,8 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6899696">
-              <caret line="244" column="5" selection-start-line="244" selection-start-column="5" selection-end-line="244" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.3799392">
+              <caret line="211" column="23" selection-start-line="211" selection-start-column="23" selection-end-line="211" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -127,8 +117,8 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="637" />
-    <option name="y" value="160" />
+    <option name="x" value="901" />
+    <option name="y" value="239" />
     <option name="width" value="1129" />
     <option name="height" value="873" />
   </component>
@@ -268,7 +258,7 @@
     <option name="totallyTimeSpent" value="3346000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="637" y="160" width="1129" height="873" extended-state="0" />
+    <frame x="901" y="239" width="1129" height="873" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16758747" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -691,8 +681,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6899696">
-          <caret line="244" column="5" selection-start-line="244" selection-start-column="5" selection-end-line="244" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.3799392">
+          <caret line="211" column="23" selection-start-line="211" selection-start-column="23" selection-end-line="211" selection-end-column="23" />
           <folding />
         </state>
       </provider>
